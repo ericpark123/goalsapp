@@ -33,6 +33,7 @@ export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
 })
 
 export const logout = createAsyncThunk('auth/logout', async () => {
+    localStorage.removeItem('user')
     await authService.logout()
 })
 
@@ -63,9 +64,6 @@ export const authSlice = createSlice({
                 state.message = action.payload
                 state.user = null
             })
-            .addCase(logout.fulfilled, (state) => {
-                state.user = null
-            })
             .addCase(login.pending, (state) => {
                 state.isLoading = true
             })
@@ -80,7 +78,10 @@ export const authSlice = createSlice({
                 state.message = action.payload
                 state.user = null
             })
-    }
+            .addCase(logout.fulfilled, (state) => {
+                state.user = null
+            })
+    },
 })
 
 export const {reset} = authSlice.actions
